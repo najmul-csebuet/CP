@@ -94,7 +94,7 @@ public:
 
 class Util {
 public: 
-    vi getPrimeNumbers(int n) {
+    static vi getPrimeNumbers(int n) {
         
         vi list;
 
@@ -120,19 +120,19 @@ public:
         return list;
     }
 
-    vi getPrefixSum(vi &a) {
+    vi getPrefixSum(vi a) {
         vi prefixSum(a.size() + 1);
         rep(i, 1, a.size() + 1) prefixSum[i] = prefixSum[i - 1] + a[i - 1];
         return prefixSum;
     }
 
-    vi getSuffixSum(vi &a) {
+    vi getSuffixSum(vi a) {
         vi suffixSum(a.size() + 1);
         rep(i, 1, a.size() + 1) suffixSum[i] = suffixSum[i - 1] + a[a.size() - i];
         return suffixSum;
     }
 
-    int hexToInt(string &s) {
+    int hexToInt(string s) {
         int ans = 0;
         rep(i, 0, s.size()) {
             if (s[i] >= '0' && s[i] <= '9') ans = ans * 16 + (s[i] - '0');
@@ -142,7 +142,7 @@ public:
         return ans;
     }
 
-    int octToInt(string &s) {
+    int octToInt(string s) {
         int ans = 0;
         rep(i, 0, s.size()) {
             if (s[i] >= '0' && s[i] <= '7') ans = ans * 8 + (s[i] - '0');
@@ -150,7 +150,7 @@ public:
         return ans;
     }
 
-    int binToInt(string &s) {
+    int binToInt(string s) {
         int ans = 0;
         rep(i, 0, s.size()) {
             if (s[i] >= '0' && s[i] <= '1') ans = ans * 2 + (s[i] - '0');
@@ -197,13 +197,13 @@ public:
         return a * b / gcd(a, b);
     }
 
-    int gcd(vi &a) {
+    int gcd(vi a) {
         int ans = a[0];
         rep(i, 1, a.size()) ans = gcd(ans, a[i]);
         return ans;
     }
 
-    int lcm(vi &a) {
+    int lcm(vi a) {
         int ans = a[0];
         rep(i, 1, a.size()) ans = lcm(ans, a[i]);
         return ans;
@@ -295,7 +295,7 @@ public:
         return ans;
     }
 
-    int getNumberOfDivisors(vi &a) {
+    int getNumberOfDivisors(vi a) {
         int ans = 1;
         for (int i = 0; i < a.size(); i++) {
             int cnt = 0;
@@ -307,7 +307,7 @@ public:
         return ans;
     }
 
-    vi getSuffixArray(string &s) {
+    vi getSuffixArray(string s) {
         s += "$";
         int n = s.size();
         vi p(n), c(n);
@@ -350,59 +350,6 @@ public:
         return false;
     }
 
-    int countSubString(string &s, vi &sa, string &sub) {
-        
-        int lower = -1, upper = -1;
-
-        // find lower index in sa which is equal to sub
-        int l = 0, r = sz(sa) - 1, lastMatch = -1;
-        while(l <= r) {
-            int mid = l + (r - l) / 2;
-            var exSub = s.substr(sa[mid], sub.length());
-            if(exSub == sub) {
-                lastMatch = mid;
-                r = mid - 1;
-            } else if(exSub < sub) {
-                l = mid + 1;
-            } else {
-                r = mid - 1;
-            }
-        }
-
-        if(lastMatch >= 0) {
-            lower = lastMatch;
-        }
-
-        if(lower == -1) {
-            return 0;
-        }
-        
-
-        // find upper index in sa which is equal to sub
-        l = 0, r = sz(sa) - 1;
-        while(l <= r) {
-            int mid = l + (r - l) / 2;
-            var exSub = s.substr(sa[mid], sub.length());
-            if(exSub <= sub) {
-                lastMatch = mid;
-                l = mid + 1;
-            } else {
-                r = mid - 1;
-            }
-        }
-
-        if(lastMatch >= 0) {
-            upper = lastMatch;
-        }
-
-        if(upper == -1) {
-            return 0;
-        }
-
-        // return upper - lower + 1
-        return upper - lower + 1;
-    }
-
 private:
     void radix_sort(vector<pair<pii, int>> &a) {
         int n = a.size();
@@ -443,10 +390,35 @@ SmartIO io;
 Util util;
 
 int main() {
+    string s;
+    cin >> s;
+    var p = util.getSuffixArray(s);
     int t;
     cin >> t;
     rep(i, 0, t) {
-        
+        string sub;
+        cin >> sub;
+        if(util.isSubString(s, p, sub)) {
+            cout << "Yes" << endl;
+        } else {
+            cout << "No" << endl;
+        }
+        /* int l = 0, r = p.size() - 1;
+        var flag = false;
+        while(l <= r) {
+            int mid = l + (r - l) / 2;
+            int idx = p[mid];
+            if(s.substr(idx, sub.size()) == sub) {
+                cout << "Yes" << endl;
+                flag = true;
+                break;
+            } else if(s.substr(idx, sub.size()) < sub) {
+                l = mid + 1;
+            } else {
+                r = mid - 1;
+            }
+        }
+        if(!flag) cout << "No" << endl; */
     }
     return 0; 
 }

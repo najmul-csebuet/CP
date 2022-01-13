@@ -443,10 +443,16 @@ SmartIO io;
 Util util;
 
 int main() {
+    string s;
+    cin >> s;
+    vi sa = util.getSuffixArray(s);
     int t;
     cin >> t;
-    rep(i, 0, t) {
-        
+    while(t--) {
+        string sub;
+        cin >> sub;
+        var count = util.countSubString(s, sa, sub);
+        cout << count << endl;
     }
     return 0; 
 }

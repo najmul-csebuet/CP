@@ -307,10 +307,10 @@ public:
         return ans;
     }
 
-    vi getSuffixArray(string &s) {
+    vi getSuffixArray(string &s, vi &c) {
         s += "$";
         int n = s.size();
-        vi p(n), c(n);
+        vi p(n);
         {
             vii a(n);
             rep(i, 0, n) a[i] = {s[i], i};
@@ -336,6 +336,7 @@ public:
         int n = s.size();
         vi lcp(n);
         int k = 0;
+        //for(int i = 0; i < n - 1; ++i)
         rep(i, 0, n - 1) {
            int pi = c[i];
            int j = sa[pi - 1];
@@ -461,10 +462,14 @@ SmartIO io;
 Util util;
 
 int main() {
-    int t;
-    cin >> t;
-    rep(i, 0, t) {
-        
-    }
+    string s;
+    cin >> s;
+    vi c(s.size() + 1);
+    var sa = util.getSuffixArray(s, c);
+    var lcp = util.getLcpArray(s, sa, c);
+    io.print(sa);
+    rep(i, 1, lcp.size()) cout << lcp[i] << " ";
+    cout << endl;
+    //io.print(lcp);
     return 0; 
 }

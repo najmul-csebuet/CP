@@ -383,8 +383,10 @@ public:
         while(l <= r) {
             int mid = l + (r - l) / 2;
             var exSub = s.substr(sa[mid], sub.length());
-            if(exSub <= sub) {
+            if(exSub == sub) {
                 lastMatch = mid;
+                l = mid + 1;
+            } else if(exSub < sub) {
                 l = mid + 1;
             } else {
                 r = mid - 1;
@@ -395,9 +397,9 @@ public:
             upper = lastMatch;
         }
 
-        if(upper == -1) {
-            return 0;
-        }
+        // if(upper == -1) {
+        //     return 0;
+        // }
 
         // return upper - lower + 1
         return upper - lower + 1;

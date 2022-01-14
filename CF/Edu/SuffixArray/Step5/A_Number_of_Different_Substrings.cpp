@@ -421,19 +421,6 @@ public:
         return upper - lower + 1;
     }
 
-    ll getNumberOfDiffSubString(string &s, vi &sa, vi &c, vi &lcp) {
-        //s.pop_back();
-        ll ans = 0;
-        // no need to calculate for n = 0 as it is $ and very first suffix in suffix array
-        int n = s.size() - 1; // exclude $ from every suffix
-        rep(i, 1, sa.size()) {
-            ans += (n - sa[i]);
-            //ans -= lcp[c[sa[i]]]; // c and sa are inverse permutation of each other
-            ans -= lcp[i];
-        }
-        return ans;
-    }
-
 private:
     void radix_sort(vector<pair<pii, int>> &a) {
         int n = a.size();
@@ -473,11 +460,66 @@ private:
 SmartIO io;
 Util util;
 
-int main() {
-    int t;
-    cin >> t;
-    rep(i, 0, t) {
-        
+ll getNumberOfDiffSubString(string &s, vi &sa, vi &c, vi &lcp) {
+    //s.pop_back();
+    ll ans = 0;
+    // no need to calculate for n = 0 as it is $ and very first suffix in suffix array
+    int n = s.size() - 1; // exclude $ from every suffix
+    rep(i, 1, sa.size()) {
+        ans += (n - sa[i]);
+        //ans -= lcp[c[sa[i]]];
+        ans -= lcp[i];
     }
+    return ans;
+}
+
+void getLcpArray(string &s, vi &p, vi &c, vi &lcp) {
+    int k = 0;
+    int n = s.size();
+    rep(i, 0, n - 1) {
+        int pi = c[i];
+        int j = p[pi - 1];
+        // lcp[i] = lcp(s[i..], s[j..])
+        while(s[i + k] == s[j + k]) ++k;
+        lcp[pi] = k;
+        if(k) --k;
+    }
+}
+
+void getSuffixArray(string &s, vi &p, vi &c) {
+    s += "$";
+    int n = s.size();
+
+    {
+        vector<pii> a(n);
+        rep(i, 0, n) a[i] = {s[i], i};
+        sort(all(a));
+        rep(i, 0, n) p[i] = a[i].second;
+        c[p[0]] = 0;
+        rep(i, 1, n) c[p[i]] = c[p[i-1]] + (a[i].first != a[i-1].first);
+    }
+
+    int k = 0;
+    vector<pair<pii, int>> a(n);
+    while((1 << k) < n) {
+        rep(i, 0, n) a[i] = {{c[i], c[(i + (1 << k)) % n]}, i};
+        sort(all(a));
+        rep(i, 0, n) p[i] = a[i].second;
+        c[p[0]] = 0;
+        rep(i, 1, n) c[p[i]] = c[p[i-1]] + (a[i].first != a[i-1].first);
+        ++k;
+    }
+
+}
+
+int main() {
+    string s;
+    cin >> s;
+    vi sa(s.size() + 1), c(s.size() + 1);
+    getSuffixArray(s, sa, c);
+    vi lcp(s.size());
+    getLcpArray(s, sa, c, lcp);
+    ll diffSubString = getNumberOfDiffSubString(s, sa, c, lcp);
+    cout << diffSubString << endl;
     return 0; 
 }

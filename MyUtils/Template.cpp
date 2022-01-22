@@ -1,7 +1,13 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+#define HIDE_TEMPLATE true
+
+#ifdef HIDE_TEMPLATE
+
 #define ll long long
+#define V vector
+#define P pair
 
 #define vc vector<char>
 #define vs vector<string>
@@ -27,7 +33,7 @@ using namespace std;
 #define sz(v) ((int)((v).size()))
 #define pie  acos(-1)
 #define mod(n,m) ((n % m + m) % m)
-#define eps (1e-8)
+#define eps (1e-9)
 #define reset(n, m) memset(n, m, sizeof n)
 #define endl '\n'
 
@@ -39,9 +45,11 @@ using namespace std;
 
 #define var auto
 
-class SmartIO {
+#endif
+
+class FastIO {
 public:
-    SmartIO() {
+    FastIO() {
         ios_base::sync_with_stdio(false);
         cin.tie(0);
         //cout.tie(0);
@@ -434,7 +442,6 @@ public:
         return ans;
     }
 
-private:
     void radix_sort(vector<pair<pii, int>> &a) {
         int n = a.size();
 
@@ -442,6 +449,7 @@ private:
             vi cnt(n);
             for(var x : a) cnt[x.first.second]++;
             vi pos(n);
+            pos[0] = 0;
             rep(i, 1, n) pos[i] = pos[i - 1] + cnt[i - 1];
 
             vector<pair<pii, int>> a_new(n);
@@ -451,6 +459,7 @@ private:
                 pos[i]++;
             }
             a = a_new;
+            //a.swap(a_new);
         }
 
         {
@@ -470,14 +479,48 @@ private:
     }
 };
 
-SmartIO io;
-Util util;
+class DisjointSet {
+    vi p;
+    vi rank;
+public:
+    DisjointSet(int n) {
+        p.resize(n);
+        rank.resize(n);
+        rep(i, 0, n) {
+            p[i] = i;
+            rank[i] = 0;
+        }
+    }
+
+    int find(int x) {
+        if(p[x] == x) return x;
+        return p[x] = find(p[x]);
+    }
+
+    void union_by_size(int x, int y) {
+        int xr = find(x);
+        int yr = find(y);
+        if(xr == yr) return;
+        if(rank[xr] < rank[yr]) {
+            p[xr] = yr;
+        } else {
+            p[yr] = xr;
+            if(rank[xr] == rank[yr]) rank[xr]++;
+        }
+    }
+};
+
+FastIO io;
+
+class Solution {
+public:
+    void solve() {
+
+    }
+};
 
 int main() {
-    int t;
-    cin >> t;
-    rep(i, 0, t) {
-        
-    }
+    var solution = Solution();
+    solution.solve();
     return 0; 
 }

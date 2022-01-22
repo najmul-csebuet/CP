@@ -1,26 +1,27 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-#define LOCAL 1
-
-#ifdef LOCAL
-
 #define ll long long
-#define ull unsigned long long
-#define vll vector<ll>
-#define pii pair<ll, ll>
-#define vii vector<pii>
+
+#define vc vector<char>
 #define vs vector<string>
 #define vb vector<bool>
 #define vi vector<int>
 #define vd vector<double>
-#define vvi vector< vector<int> >
-#define vvii vector< vector< pii > >
-#define ld long double
-#define mapii map<int, int>
-#define mapsi map<string, int>
-#define rep(i, x, n)  for (auto i = x; i< (ll)(n); i++)
-#define repr(i, x, n)  for (auto i = x; i> (ll)(n); i--)
+#define vll vector<ll>
+
+
+#define pii pair<int, int>
+#define vii vector<pair<int, int>>
+
+#define vvi vector<vector<int>>
+
+#define mii map<int, int>
+#define msi map<string, int>
+
+#define rep(i, a, b) for (auto i = (a); i < (b); ++i)
+#define repr(i, a, b) for (auto i = (a); i > (b); --i)
+
 #define INF  LLONG_MAX
 #define all(v) ((v).begin()), ((v).end())
 #define sz(v) ((int)((v).size()))
@@ -29,10 +30,6 @@ using namespace std;
 #define eps (1e-8)
 #define reset(n, m) memset(n, m, sizeof n)
 #define endl '\n'
-#define output freopen("output.txt", "w", stdout)
-
-//#define mp(x, y, z) {x, {y, z}}
-#define mp(x, y) {x, y}
 
 #define pb push_back
 #define eb emplace_back
@@ -41,7 +38,6 @@ using namespace std;
 #define endl '\n'
 
 #define var auto
-#endif
 
 class SmartIO {
 public:
@@ -54,7 +50,7 @@ public:
         //cin.tie(NULL); 
 
         //https://stackoverflow.com/questions/11019983/automatic-cout-flushing
-        cout << unitbuf; 
+        //cout << unitbuf; 
     }
 
     string nextLine() {
@@ -98,7 +94,7 @@ public:
 
 class Util {
 public: 
-    static vi getPrimeNumbers(int n) {
+    vi getPrimeNumbers(int n) {
         
         vi list;
 
@@ -124,19 +120,19 @@ public:
         return list;
     }
 
-    vi getPrefixSum(vi a) {
+    vi getPrefixSum(vi &a) {
         vi prefixSum(a.size() + 1);
         rep(i, 1, a.size() + 1) prefixSum[i] = prefixSum[i - 1] + a[i - 1];
         return prefixSum;
     }
 
-    vi getSuffixSum(vi a) {
+    vi getSuffixSum(vi &a) {
         vi suffixSum(a.size() + 1);
         rep(i, 1, a.size() + 1) suffixSum[i] = suffixSum[i - 1] + a[a.size() - i];
         return suffixSum;
     }
 
-    int hexToInt(string s) {
+    int hexToInt(string &s) {
         int ans = 0;
         rep(i, 0, s.size()) {
             if (s[i] >= '0' && s[i] <= '9') ans = ans * 16 + (s[i] - '0');
@@ -146,7 +142,7 @@ public:
         return ans;
     }
 
-    int octToInt(string s) {
+    int octToInt(string &s) {
         int ans = 0;
         rep(i, 0, s.size()) {
             if (s[i] >= '0' && s[i] <= '7') ans = ans * 8 + (s[i] - '0');
@@ -154,7 +150,7 @@ public:
         return ans;
     }
 
-    int binToInt(string s) {
+    int binToInt(string &s) {
         int ans = 0;
         rep(i, 0, s.size()) {
             if (s[i] >= '0' && s[i] <= '1') ans = ans * 2 + (s[i] - '0');
@@ -201,13 +197,13 @@ public:
         return a * b / gcd(a, b);
     }
 
-    int gcd(vi a) {
+    int gcd(vi &a) {
         int ans = a[0];
         rep(i, 1, a.size()) ans = gcd(ans, a[i]);
         return ans;
     }
 
-    int lcm(vi a) {
+    int lcm(vi &a) {
         int ans = a[0];
         rep(i, 1, a.size()) ans = lcm(ans, a[i]);
         return ans;
@@ -299,7 +295,7 @@ public:
         return ans;
     }
 
-    int getNumberOfDivisors(vi a) {
+    int getNumberOfDivisors(vi &a) {
         int ans = 1;
         for (int i = 0; i < a.size(); i++) {
             int cnt = 0;
@@ -311,60 +307,201 @@ public:
         return ans;
     }
 
-    vi getSuffixArray(string s) {
+    vi getSuffixArray(string &s, vi &c) {
+        s += "#";
         int n = s.size();
-        vi sa(n);
-        vi rank(n);
-        vi tmp(n);
-        rep(i, 0, n) sa[i] = i, rank[i] = s[i];
-        for (int k = 1; k < n; k <<= 1) {
-            sort(all(sa), [&](int i, int j) {
-                if (rank[i] != rank[j]) return rank[i] < rank[j];
-                return sa[i] < sa[j];
-            });
-            tmp[sa[0]] = 0;
-            rep(i, 1, n) tmp[sa[i]] = tmp[sa[i - 1]] + (rank[sa[i - 1]] == rank[sa[i]]);
-            rep(i, 0, n) rank[i] = tmp[i];
+        vi p(n);
+        {
+            vii a(n);
+            rep(i, 0, n) a[i] = {s[i], i};
+            sort(all(a));
+            rep(i, 0, n) p[i] = a[i].second;
+            c[p[0]] = 0;
+            rep(i, 1, n) c[p[i]] = c[p[i - 1]] + (a[i].first != a[i-1].first);
         }
-        return sa;
+        int k = 0;
+        while((1 << k) < n) {
+            vector<pair<pii, int>> a(n);
+            rep(i, 0, n) a[i] = {{c[i], c[(i + (1 << k)) % n]}, i};
+            radix_sort(a);
+            rep(i, 0, n) p[i] = a[i].second;
+            c[p[0]] = 0;
+            rep(i, 1, n) c[p[i]] = c[p[i - 1]] + (a[i].first != a[i-1].first);
+            ++k;
+        }
+        return p;
     }
 
-    vi getLcpArray(string s, vi sa) {
+    vi getLcpArray(string &s, vi &sa, vi &c) {
         int n = s.size();
-        vi lcp(n - 1);
-        vi rank(n);
-        rep(i, 0, n) rank[sa[i]] = i;
-        int h = 0;
-        rep(i, 0, n) {
-            if (rank[i] == n - 1) {
-                h = 0;
-                continue;
-            }
-            int j = sa[rank[i] + 1];
-            while (i + h < n && j + h < n && s[i + h] == s[j + h]) h++;
-            lcp[rank[i]] = h;
-            if (h > 0) h--;
+        vi lcp(n);
+        int k = 0;
+        rep(i, 0, n - 1) {
+           int pi = c[i];
+           int j = sa[pi - 1];
+           // lcp[i] = lcp(s[i..], s[j..])
+           while(s[i + k] == s[j + k]) ++k;
+           lcp[pi] = k;
+           k = max(k - 1, 0);
         }
         return lcp;
     }
-};
 
-SmartIO i;
-Util u;
-
-int main() {
-    int t;
-    cin >> t;
-    while(t-- > 0) {
-        var primes = u.getPrimeNumbers(20);
-        i.print(primes);
-        var prefixSum = u.getPrefixSum(primes);
-        i.print(prefixSum);
-        var suffixSum = u.getSuffixSum(primes);
-        i.print(suffixSum);
+    bool isSubString(string &s, vi &sa, string &sub) {
+        //return s.find(t) != string::npos;
+        int l = 0, r = sa.size() - 1;
+        var flag = false;
+        while(l <= r) {
+            int mid = l + (r - l) / 2;
+            int idx = sa[mid];
+            if(s.substr(idx, sub.size()) == sub) {
+                return true;
+            } else if(s.substr(idx, sub.size()) < sub) {
+                l = mid + 1;
+            } else {
+                r = mid - 1;
+            }
+        }
+        return false;
     }
 
-    var d = u.hexToInt("0x123");
-    cout << d << endl;
+    int countSubString(string &s, vi &sa, string &sub) {
+        
+        int lower = -1, upper = -1;
+
+        // find lower index in sa which is equal to sub
+        int l = 0, r = sz(sa) - 1, lastMatch = -1;
+        while(l <= r) {
+            int mid = l + (r - l) / 2;
+            var exSub = s.substr(sa[mid], sub.length());
+            if(exSub == sub) {
+                lastMatch = mid;
+                r = mid - 1;
+            } else if(exSub < sub) {
+                l = mid + 1;
+            } else {
+                r = mid - 1;
+            }
+        }
+
+        if(lastMatch >= 0) {
+            lower = lastMatch;
+        }
+
+        if(lower == -1) {
+            return 0;
+        }
+        
+
+        // find upper index in sa which is equal to sub
+        l = 0, r = sz(sa) - 1;
+        while(l <= r) {
+            int mid = l + (r - l) / 2;
+            var exSub = s.substr(sa[mid], sub.length());
+            if(exSub == sub) {
+                lastMatch = mid;
+                l = mid + 1;
+            } else if(exSub < sub) {
+                l = mid + 1;
+            } else {
+                r = mid - 1;
+            }
+        }
+
+        if(lastMatch >= 0) {
+            upper = lastMatch;
+        }
+
+        // upper check not needed if lower chk done first.
+        // if(upper == -1) {
+        //     return 0;
+        // }
+
+        // return upper - lower + 1
+        return upper - lower + 1;
+    }
+
+    ll getNumberOfDiffSubString(string &s, vi &sa, vi &c, vi &lcp) {
+        //s.pop_back();
+        ll ans = 0;
+        // no need to calculate for n = 0 as it is $ and very first suffix in suffix array
+        int n = s.size() - 1; // exclude $ from every suffix
+        rep(i, 1, sa.size()) {
+            ans += (n - sa[i]);
+            //ans -= lcp[c[sa[i]]]; // c and sa are inverse permutation of each other
+            ans -= lcp[i];
+        }
+        return ans;
+    }
+
+private:
+    void radix_sort(vector<pair<pii, int>> &a) {
+        int n = a.size();
+
+        {
+            vi cnt(n);
+            for(var x : a) cnt[x.first.second]++;
+            vi pos(n);
+            pos[0] = 0;
+            rep(i, 1, n) pos[i] = pos[i - 1] + cnt[i - 1];
+
+            vector<pair<pii, int>> a_new(n);
+            for(var x : a) {
+                int i = x.first.second;
+                a_new[pos[i]] = x;
+                pos[i]++;
+            }
+            a = a_new;
+            //a.swap(a_new);
+        }
+
+        {
+            vi cnt(n);
+            for(var x : a) cnt[x.first.first]++;
+            vi pos(n);
+            rep(i, 1, n) pos[i] = pos[i - 1] + cnt[i - 1];
+
+            vector<pair<pii, int>> a_new(n);
+            for(var x : a) {
+                int i = x.first.first;
+                a_new[pos[i]] = x;
+                pos[i]++;
+            }
+            a = a_new;
+        }
+    }
+};
+
+SmartIO io;
+Util util;
+
+int main() {
+    //cout << '#' - '$' << endl;
+    string s1, s2;
+    cin >> s1 >> s2;
+    string s = s1 + "$" + s2;
+    vi c(s.size() + 1);
+    vi sa = util.getSuffixArray(s, c);
+    vi lcp = util.getLcpArray(s, sa, c);
+    var max = -1, maxindex = -1;
+    rep(i, 1, sa.size()) {
+        if(sa[i] < s1.size() && sa[i-1] > s1.size()) {
+            if(lcp[i] > max) {
+                max = lcp[i];
+                maxindex = i;
+            }
+        } else if(sa[i] > s1.size() && sa[i-1] < s1.size()) {
+            if(lcp[i] > max) {
+                max = lcp[i];
+                maxindex = i;
+            }
+        }
+    }
+    if(maxindex == -1) {
+        cout << "No common substring" << endl;
+    } else {
+        cout << s.substr(sa[maxindex], max) << endl;
+    }
+    cout.flush();
     return 0; 
 }

@@ -1,5 +1,3 @@
-// AC
-
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -47,6 +45,8 @@ using namespace std;
 
 #define var auto
 
+#define tr(container, it)\
+for (typeof (container.begin()) it = container.begin(); it != container.end(); it++)
 #endif
 
 class FastIO {
@@ -512,34 +512,35 @@ public:
     }
 };
 
-FastIO io;
-
 class Solution {
+    FastIO io;
 public:
     void solve() {
-        int n, l;
-        cin >> n >> l;
-        var A = io.nextInts(n);
-        sort(all(A));
-        
-        double gap = -1;
-        rep(i, 0, n - 1) {
-            var a = A[i];
-            var b = A[i + 1];
-            var g = (double)b - a;
-            if(g > gap) gap = g;
+        var boys = io.nextInts();
+        sort(all(boys));
+        var girls = io.nextInts();
+        mii girlMap;
+        for(var g : girls) {
+        //tr(girls, it) {
+            girlMap[g]++;
         }
 
-        if(A[0] > 0) {
-            gap = max(gap, (double)A[0] * 2);
+        int count = 0;
+        for(var b : boys) {
+        //tr(boys, it) {
+            //int b = *it;
+            if(girlMap[b - 1] > 0) {
+                girlMap[b - 1]--;
+                count++;
+            } else if(girlMap[b] > 0) {
+                girlMap[b]--;
+                count++;
+            } else if(girlMap[b + 1] > 0) {
+                girlMap[b + 1]--;
+                count++;
+            }
         }
-
-        if(A[n - 1] < l) {
-            gap = max(gap, ((double)l - A[n - 1]) * 2);
-        }
-
-        cout << fixed << setprecision(10) << gap / 2 << endl;
-        //printf("%.10f\n", gap / 2);
+        cout << count << endl;
     }
 };
 

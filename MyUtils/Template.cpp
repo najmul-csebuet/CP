@@ -45,10 +45,11 @@ using namespace std;
 
 #define var auto
 
+#define tr(container, it)\
+for (typeof (container.begin()) it = container.begin(); it != container.end(); it++)
 #endif
 
-class FastIO {
-public:
+struct FastIO {
     FastIO() {
         ios_base::sync_with_stdio(false);
         cin.tie(0);
@@ -100,8 +101,7 @@ public:
     }
 };
 
-class Util {
-public: 
+struct Util {
     vi getPrimeNumbers(int n) {
         
         vi list;
@@ -479,10 +479,9 @@ public:
     }
 };
 
-class DisjointSet {
+struct DisjointSet {
     vi p;
     vi rank;
-public:
     DisjointSet(int n) {
         p.resize(n);
         rank.resize(n);
@@ -510,10 +509,9 @@ public:
     }
 };
 
-FastIO io;
-
-class Solution {
-public:
+struct Solution {
+    FastIO io;
+    
     void solve() {
 
     }

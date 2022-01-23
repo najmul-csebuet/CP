@@ -1,5 +1,3 @@
-// AC
-
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -47,6 +45,8 @@ using namespace std;
 
 #define var auto
 
+#define tr(container, it)\
+for (typeof (container.begin()) it = container.begin(); it != container.end(); it++)
 #endif
 
 class FastIO {
@@ -517,29 +517,20 @@ FastIO io;
 class Solution {
 public:
     void solve() {
-        int n, l;
-        cin >> n >> l;
-        var A = io.nextInts(n);
-        sort(all(A));
-        
-        double gap = -1;
-        rep(i, 0, n - 1) {
-            var a = A[i];
-            var b = A[i + 1];
-            var g = (double)b - a;
-            if(g > gap) gap = g;
-        }
+        int n,m,a,b;
+        cin >> n >> m >> a >> b;
 
-        if(A[0] > 0) {
-            gap = max(gap, (double)A[0] * 2);
+        if(a <= (b / m)) {
+            cout << n * a << endl;
+        } else {
+            int s = b * (n / m);
+            int t = mod(n, m);
+            if(a * t <= b) {
+                cout << s + a * t << endl;
+            } else {
+                cout << s + b << endl;
+            }
         }
-
-        if(A[n - 1] < l) {
-            gap = max(gap, ((double)l - A[n - 1]) * 2);
-        }
-
-        cout << fixed << setprecision(10) << gap / 2 << endl;
-        //printf("%.10f\n", gap / 2);
     }
 };
 

@@ -1,5 +1,3 @@
-// AC
-
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -47,10 +45,11 @@ using namespace std;
 
 #define var auto
 
+#define tr(container, it)\
+for (typeof (container.begin()) it = container.begin(); it != container.end(); it++)
 #endif
 
-class FastIO {
-public:
+struct FastIO {
     FastIO() {
         ios_base::sync_with_stdio(false);
         cin.tie(0);
@@ -102,8 +101,7 @@ public:
     }
 };
 
-class Util {
-public: 
+struct Util {
     vi getPrimeNumbers(int n) {
         
         vi list;
@@ -481,10 +479,9 @@ public:
     }
 };
 
-class DisjointSet {
+struct DisjointSet {
     vi p;
     vi rank;
-public:
     DisjointSet(int n) {
         p.resize(n);
         rank.resize(n);
@@ -512,34 +509,85 @@ public:
     }
 };
 
-FastIO io;
+/* struct ZO {
+    
+    int zero, one;
+    ZO() {
+        zero = 0;
+        one = 0;
+    }
 
-class Solution {
-public:
+    ZO(int z, int o) {
+        zero = z;
+        one = o;
+    }
+
+    bool operator==(ZO &z) {
+        return zero == z.zero && one == z.one;
+    }
+
+    ZO operator+=(ZO &z) {
+        return ZO(zero + z.zero, one + z.one);
+    }
+
+    ZO operator-(ZO &z) {
+        return ZO(zero - z.zero, one - z.one);
+    }
+
+    bool operator>=(ZO &z) {
+        return (zero - one) >= (z.zero - z.one);
+    }
+
+    bool operator<(ZO &z) {
+        return (zero - one) < (z.zero - z.one);
+    }
+}; */
+
+struct Solution {
+    FastIO io;
+    
     void solve() {
-        int n, l;
-        cin >> n >> l;
-        var A = io.nextInts(n);
-        sort(all(A));
-        
-        double gap = -1;
-        rep(i, 0, n - 1) {
-            var a = A[i];
-            var b = A[i + 1];
-            var g = (double)b - a;
-            if(g > gap) gap = g;
+        vi A = io.nextInts();
+        int maxSum = -1, maxI, maxJ, currentSum = 0;
+        int i = 0;
+        rep(j, 0, A.size()) {
+            currentSum += (A[j] == 0 ? 1 : -1);
+            while(i < A.size() && currentSum < 0) {
+                currentSum -= (A[i] == 0 ? 1 : -1);
+                i++;
+            }
+
+            if(i <= j && currentSum > maxSum) {
+                maxSum = currentSum;
+                maxI = i;
+                maxJ = j;
+                continue;
+            }
         }
 
-        if(A[0] > 0) {
-            gap = max(gap, (double)A[0] * 2);
+        if(maxSum == -1) {
+            maxSum = 0;
+            rep(i, 1, A.size()) {
+                maxSum += A[i];
+            }
+            cout << maxSum << endl;
+            return;
         }
 
-        if(A[n - 1] < l) {
-            gap = max(gap, ((double)l - A[n - 1]) * 2);
+        maxSum = 0;
+        rep(i, 0, maxI) {
+            maxSum += A[i];
         }
 
-        cout << fixed << setprecision(10) << gap / 2 << endl;
-        //printf("%.10f\n", gap / 2);
+        rep(i, maxI, maxJ + 1) {
+            maxSum += A[i] == 0;
+        }
+
+        rep(i, maxJ + 1, A.size()) {
+            maxSum += A[i];
+        }
+
+        cout << max(maxSum, 0) << endl;
     }
 };
 

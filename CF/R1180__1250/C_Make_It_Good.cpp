@@ -514,14 +514,29 @@ struct DisjointSet {
 FastIO io;
 
 void solve() {
+    var A = io.nextInts();
+    reverse(all(A));
+    int peak = -1;
+    rep(i, 0, sz(A)) {
+        if(A[i] <= A[i + 1]) continue;
+        peak = i;
+        break;
+    }
+    int bottom = -1;
+    rep(i, peak, sz(A)) {
+        if(A[i] >= A[i + 1]) continue;
+        bottom = i;
+        break;
+    }
 
+    cout << ((bottom == -1) ? 0 : (sz(A) - bottom - 1)) << endl;
 }
 
 int main() {
-    /* int t;
+    int t;
     cin >> t;
     while(t--) {
         solve();
-    } */
-    solve();
+    }
+    //solve();
 }

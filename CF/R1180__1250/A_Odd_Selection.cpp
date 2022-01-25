@@ -5,8 +5,6 @@ using namespace std;
 
 #ifdef HIDE_TEMPLATE
 
-#define dist(x1, y1, x2, y2) sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2))
-
 #define ll long long
 #define V vector
 #define P pair
@@ -47,8 +45,8 @@ using namespace std;
 
 #define var auto
 
-#define tr(container, it) for (var it = container.begin(); it != container.end(); it++)
-#define trr(container, it) for (var it = container.rbegin(); it != container.rend(); it++)
+#define tr(container, it)\
+for (typeof (container.begin()) it = container.begin(); it != container.end(); it++)
 #endif
 
 struct FastIO {
@@ -514,14 +512,29 @@ struct DisjointSet {
 FastIO io;
 
 void solve() {
+    int n, x;
+    cin >> n >> x;
+    var N = io.nextInts(n);
+    int odd = 0, even = 0;
+    for(int a : N) {
+        if(mod(a, 2)) ++odd;
+        else ++even;
+    }
 
+    for(var i = 1; i <= min(x, odd); i += 2) {
+        if(x - i <= even) {
+            cout << "Yes" << endl;
+            return;
+        }
+    }
+    cout << "No" << endl;
 }
 
 int main() {
-    /* int t;
+    int t;
     cin >> t;
     while(t--) {
         solve();
-    } */
-    solve();
+    }
+    //solve();
 }

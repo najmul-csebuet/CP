@@ -48,7 +48,6 @@ using namespace std;
 #define var auto
 
 #define tr(container, it) for (var it = container.begin(); it != container.end(); it++)
-#define trr(container, it) for (var it = container.rbegin(); it != container.rend(); it++)
 #endif
 
 struct FastIO {
@@ -514,14 +513,45 @@ struct DisjointSet {
 FastIO io;
 
 void solve() {
+    var A = io.nextInts();
+    //mii map;
+    unordered_map<int, int> map; // faster than mii in this case
+    map.reserve(4096);
+    map.max_load_factor(0.25);
 
+    ll ans = 0;
+    rep(i, 0, sz(A)) {
+        ans += map[A[i] - i];
+        map[A[i] - i]++;
+    }
+    
+    cout << ans << endl;
+}
+
+
+void solveAC1() {
+    var A = io.nextInts();
+    
+    mii map;
+    rep(i, 0, sz(A)) {
+        map[A[i] - i]++;
+    }
+
+    ll ans = 0;
+    tr(map, it) {
+        if(it->second > 1) {
+            ans += (ll) it->second * (it->second - 1) / 2;
+        }
+    }
+
+    cout << ans << endl;
 }
 
 int main() {
-    /* int t;
+    int t;
     cin >> t;
     while(t--) {
         solve();
-    } */
-    solve();
+    }
+    //solve();
 }

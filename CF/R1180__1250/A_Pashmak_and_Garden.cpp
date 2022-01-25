@@ -4,9 +4,9 @@ using namespace std;
 #define HIDE_TEMPLATE true
 
 #ifdef HIDE_TEMPLATE
-
 #define dist(x1, y1, x2, y2) sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2))
-
+#define rad(x1, y1, x2, y2) atan2((y2) - (y1), (x2) - (x1))
+#define deg(x1, y1, x2, y2) rad(x1, y1, x2, y2) * 180 / pie
 #define ll long long
 #define V vector
 #define P pair
@@ -47,8 +47,8 @@ using namespace std;
 
 #define var auto
 
-#define tr(container, it) for (var it = container.begin(); it != container.end(); it++)
-#define trr(container, it) for (var it = container.rbegin(); it != container.rend(); it++)
+#define tr(container, it)\
+for (typeof (container.begin()) it = container.begin(); it != container.end(); it++)
 #endif
 
 struct FastIO {
@@ -513,8 +513,57 @@ struct DisjointSet {
 
 FastIO io;
 
-void solve() {
+bool validPoint(pii p) {
+    int x = p.first, y = p.second;
+    return -1000 <= x && x <= 1000 && -1000 <= y && y <= 1000;
+}
 
+void solve() {
+    vii points(2);
+    rep(i, 0, 2) cin >> points[i].first >> points[i].second;
+    sort(all(points));
+    // Case 1
+    int x1, y1, x2, y2;
+    x1 = points[0].first;
+    y1 = points[0].second;
+    x2 = points[1].first;
+    y2 = points[1].second;
+    int l = dist(x1, y1, x2, y2);
+    if(x1 == x2) {
+        // vertical line
+        for(int d : {+l, -l}) {
+            int nx = x1 + d;
+            if(validPoint({nx, y1}) && validPoint({nx, y2})) {
+                cout << nx << " " << y1 << " " << nx << " " << y2 << endl;
+                return;
+            }
+        }
+    }
+
+    if(y1 == y2) {
+        // horizontal line
+        for(int d : {+l, -l}) {
+            int ny = y1 + d;
+            if(validPoint({x1, ny}) && validPoint({x2, ny})) {
+                cout << x1 << " " << ny << " " << x2 << " " << ny << endl;
+                return;
+            }
+        }
+    }
+
+    // Case 2
+    double t = deg(x1, y1, x2, y2);
+    if(abs(abs(t) - 45) > eps) {
+        cout << -1 << endl;
+        return;
+    }
+
+    pii p1 = {x2, y1};
+    pii p2 = {x1, y2};
+    if(validPoint(p1) && validPoint(p2)) {
+        cout << p1.first << " " << p1.second << " " << p2.first << " " << p2.second << endl;
+        return;
+    }
 }
 
 int main() {

@@ -5,8 +5,6 @@ using namespace std;
 
 #ifdef HIDE_TEMPLATE
 
-#define dist(x1, y1, x2, y2) sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2))
-
 #define ll long long
 #define V vector
 #define P pair
@@ -30,6 +28,8 @@ using namespace std;
 #define rep(i, a, b) for (auto i = (a); i < (b); ++i)
 #define repr(i, a, b) for (auto i = (a); i > (b); --i)
 
+#define na(a) int n; cin >> n; a.resize(n); rep(i, 0, n) cin >> a[i]
+
 #define INF  LLONG_MAX
 #define all(v) ((v).begin()), ((v).end())
 #define sz(v) ((int)((v).size()))
@@ -47,8 +47,8 @@ using namespace std;
 
 #define var auto
 
-#define tr(container, it) for (var it = container.begin(); it != container.end(); it++)
-#define trr(container, it) for (var it = container.rbegin(); it != container.rend(); it++)
+#define tr(container, it)\
+for (typeof (container.begin()) it = container.begin(); it != container.end(); it++)
 #endif
 
 struct FastIO {
@@ -513,8 +513,18 @@ struct DisjointSet {
 
 FastIO io;
 
-void solve() {
-
+void solve(const vi &worms) {
+    vi prefiXSum(worms.size() + 1);
+    rep(i, 0, sz(worms)) {
+        prefiXSum[i + 1] = prefiXSum[i] + worms[i];
+    }
+    int m, q;
+    cin >> m;
+    while(m--) {
+        cin >> q;
+        var ans = lower_bound(prefiXSum.begin(), prefiXSum.end(), q) - prefiXSum.begin();
+        cout << ans << endl;
+    }
 }
 
 int main() {
@@ -523,5 +533,6 @@ int main() {
     while(t--) {
         solve();
     } */
-    solve();
+    var worms = io.nextInts();
+    solve(worms);
 }

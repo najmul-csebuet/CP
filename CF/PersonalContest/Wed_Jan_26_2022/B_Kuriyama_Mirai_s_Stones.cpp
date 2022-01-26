@@ -11,8 +11,6 @@ using namespace std;
 #define V vector
 #define P pair
 
-#define si set<int>
-
 #define vc vector<char>
 #define vs vector<string>
 #define vb vector<bool>
@@ -516,14 +514,28 @@ struct DisjointSet {
 FastIO io;
 
 void solve() {
+    var costs = io.nextInts();
 
+    vll prefixSum1(costs.size() + 1);
+    rep(i, 0, costs.size()) prefixSum1[i + 1] = prefixSum1[i] + costs[i];
+
+    sort(all(costs));
+    vll prefixSum2(costs.size() + 1);
+    rep(i, 0, costs.size()) prefixSum2[i + 1] = prefixSum2[i] + costs[i];
+
+    int m;
+    cin >> m;
+    int t, l, r;
+    while(m--) {
+        cin >> t >> l >> r;
+        if(t == 1) {
+            cout << prefixSum1[r] - prefixSum1[l - 1] << endl;
+        } else {
+            cout << prefixSum2[r] - prefixSum2[l - 1] << endl;
+        }
+    }
 }
 
 int main() {
-    /* int t;
-    cin >> t;
-    while(t--) {
-        solve();
-    } */
     solve();
 }

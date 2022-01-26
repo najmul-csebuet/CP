@@ -515,15 +515,54 @@ struct DisjointSet {
 
 FastIO io;
 
-void solve() {
+bool hasZero(ll a) {
+    while(a > 9) {
+        if(a % 10 == 0) return true;
+        a /= 10;
+    }
+    return false;
+}
 
+int minDigit(ll a) {
+    var s = to_string(a);
+    sort(all(s));
+    return s[0] - '0';
+    /* ll ans = 10;
+    while(a > 0) {
+        ans = min(ans, a % 10);
+        a /= 10;
+    }
+    return ans; */
+}
+
+int maxDigit(ll a) {
+    var s = to_string(a);
+    sort(all(s), greater<char>());
+    return s[0] - '0';
+    /* ll ans = -1;
+    while(a > 0) {
+        ans = max(ans, a % 10);
+        a /= 10;
+    }
+    return ans; */
+}
+
+void solve() {
+    ll a1, k;
+    int i = 1;
+    cin >> a1 >> k;
+    while(i++ < k && !hasZero(a1)) {
+        int a = minDigit(a1);
+        int b = maxDigit(a1);
+        a1 = a1 + a * b;
+    }
+    cout << a1 << endl;
 }
 
 int main() {
-    /* int t;
+    int t;
     cin >> t;
     while(t--) {
         solve();
-    } */
-    solve();
+    }
 }

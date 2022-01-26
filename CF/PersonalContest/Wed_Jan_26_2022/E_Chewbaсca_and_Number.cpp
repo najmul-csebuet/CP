@@ -516,14 +516,23 @@ struct DisjointSet {
 FastIO io;
 
 void solve() {
-
+    string x;
+    cin >> x;
+    int n = x.size();
+    if(x[0] >= '5') {
+        x[0] = '0' + '9' - x[0];
+    }
+    if(x[0] == '0') {
+        x[0] = '9';
+    }
+    rep(i, 1, n) {
+        if(x[i] >= '5') {
+            x[i] = '0' + '9' - x[i];
+        }
+    }
+    cout << x << endl;
 }
 
 int main() {
-    /* int t;
-    cin >> t;
-    while(t--) {
-        solve();
-    } */
     solve();
 }

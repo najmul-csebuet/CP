@@ -516,14 +516,32 @@ struct DisjointSet {
 FastIO io;
 
 void solve() {
-
+    string s;
+    cin >> s;
+    int n = s.size();
+    int i = 0, minLen = n+1;
+    mii map;
+    rep(j, 0, n) {
+        map[s[j]]++;
+        if (!(map['1'] && map['2'] && map['3'])) continue;
+        
+        while(map['1'] && map['2'] && map['3']) {
+            minLen = min(minLen, j - i + 1);
+            map[s[i]]--;
+            i++;
+        }
+    }
+    if(minLen == n+1) {
+        cout << 0 << endl;
+    } else {
+        cout << minLen << endl;
+    }
 }
 
 int main() {
-    /* int t;
+    int t;
     cin >> t;
     while(t--) {
         solve();
-    } */
-    solve();
+    }
 }

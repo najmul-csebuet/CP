@@ -52,29 +52,6 @@ using namespace std;
 
 #define tr(container, it) for (var it = container.begin(); it != container.end(); it++)
 #define trr(container, it) for (var it = container.rbegin(); it != container.rend(); it++)
-
-// https://codeforces.com/blog/entry/62393
-struct custom_hash {
-    static uint64_t splitmix64(uint64_t x) {
-        // http://xorshift.di.unimi.it/splitmix64.c
-        x += 0x9e3779b97f4a7c15;
-        x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9;
-        x = (x ^ (x >> 27)) * 0x94d049bb133111eb;
-        return x ^ (x >> 31);
-    }
-
-    size_t operator()(uint64_t x) const {
-        static const uint64_t FIXED_RANDOM = chrono::steady_clock::now().time_since_epoch().count();
-        return splitmix64(x + FIXED_RANDOM);
-    }
-};
-
-#define umii unordered_map<int, int, custom_hash>
-#define ghtii gp_hash_table<int, int, custom_hash>
-#define boost(a) a.max_load_factor(0.25); a.reserve(1<<20);
-
-#define eqd(a,b) (abs(a-b)<1e-9)
-
 #endif
 
 struct IO {
@@ -119,15 +96,46 @@ struct IO {
 } io;
 
 void solve() {
+    int n, x, y, a, inc;
+    cin >> n >> x >> y;
+    rep(d, 1, y - x + 1) {
+        if((y - x) % d) continue;
+        a = (y - x) / d;
+        if(a + 1 <= n) {
+            inc = d;
+            break;
+        }
+    }
 
+    vi ans;
+    for(int i = x; i <= y; i += inc) {
+        ans.eb(i);
+    }
+
+    if(sz(ans) < n) {
+        int need = n - a - 1;//3
+        while (need > 0 && x - inc > 0) {
+            x -= inc;
+            need--;
+            ans.eb(x);
+        }
+
+        while (need > 0) {
+            y += inc;
+            need--;
+            ans.eb(y);
+        }
+    }
+    
+    sort(all(ans));
+    io.print(ans);
 }
 
 int main() {
     ACTIVATE_FASTIO()
-    /* int t;
+    int t;
     cin >> t;
     while(t--) {
         solve();
-    } */
-    solve();
+    }
 }

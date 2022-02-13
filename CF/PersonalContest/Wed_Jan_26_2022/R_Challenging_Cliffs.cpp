@@ -119,15 +119,54 @@ struct IO {
 } io;
 
 void solve() {
+    var H = io.readInts();
+    umii map;
+    rep(i, 0, H.size()) map[H[i]]++;
+    // 4 2 1 2
+    // 4 -> 1
+    // 2 -> 2
+    // 1 -> 1
+    sort(all(H));
+    int a = -1, aFreq = 0;
+    for(int i = 0; i < H.size(); i++) {
+        if(map[H[i]] == 1) continue;
+        if(a == -1) {
+            a = H[i];
+            aFreq = map[H[i]];
+        } else {
+            if(aFreq < map[H[i]]) {
+                a = H[i];
+                aFreq = map[H[i]];
+            }
+        }
+    }
 
+    if(a == -1) {
+        io.print(H);
+        return;
+    }
+
+    // 1 2 3 3 3 3 4 5
+    // 3 3 3 1 2 4 5 3 --> 5
+    // 3 1 2 3 3 3 4 5 --> 6
+    vi ans = {a};
+    aFreq = 2;
+    rep(i, 0, H.size()) {
+        if(H[i] == a && aFreq) {
+            aFreq--;
+            continue;
+        }
+        ans.pb(H[i]);
+    }
+    ans.pb(a);
+    io.print(ans);
 }
 
 int main() {
     ACTIVATE_FASTIO()
-    /* int t;
+    int t;
     cin >> t;
     while(t--) {
         solve();
-    } */
-    solve();
+    }
 }

@@ -119,15 +119,31 @@ struct IO {
 } io;
 
 void solve() {
+    var A = io.readInts();
+    ll ans = 0;
+    umii map;
+    boost(map);
+    int n = sz(A);
+    rep(i, 0, n) map[A[i]]++;
 
+    // j = 1, 2, 3, ..., n
+    rep(j, 2, n + 1) {
+        int aj = A[j - 1];
+        if(2*j - 1 < aj) continue;
+        int high = 2*j - 1 - mod(2*j - 1, aj);
+        // i = j - 1, j - 2, ..., 1
+        for(int i = high; i >= aj && i >= j + 1; i -= aj) {
+            ans += map[i / aj];
+        }
+    }
+    cout << ans << "\n";
 }
 
 int main() {
     ACTIVATE_FASTIO()
-    /* int t;
+    int t;
     cin >> t;
     while(t--) {
         solve();
-    } */
-    solve();
+    }
 }

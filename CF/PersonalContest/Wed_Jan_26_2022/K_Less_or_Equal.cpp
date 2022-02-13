@@ -31,8 +31,8 @@ using namespace std;
 #define mii map<int, int>
 #define msi map<string, int>
 
-#define rep(i, a, b) for (auto i = (a); i < (b); ++i)
-#define repr(i, a, b) for (auto i = (a); i > (b); --i)
+#define rep(i, a, b) for (auto i = (a); i <= (b); ++i)
+#define repr(i, a, b) for (auto i = (a); i >= (b); --i)
 
 #define INF  LLONG_MAX
 #define all(v) ((v).begin()), ((v).end())
@@ -52,29 +52,6 @@ using namespace std;
 
 #define tr(container, it) for (var it = container.begin(); it != container.end(); it++)
 #define trr(container, it) for (var it = container.rbegin(); it != container.rend(); it++)
-
-// https://codeforces.com/blog/entry/62393
-struct custom_hash {
-    static uint64_t splitmix64(uint64_t x) {
-        // http://xorshift.di.unimi.it/splitmix64.c
-        x += 0x9e3779b97f4a7c15;
-        x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9;
-        x = (x ^ (x >> 27)) * 0x94d049bb133111eb;
-        return x ^ (x >> 31);
-    }
-
-    size_t operator()(uint64_t x) const {
-        static const uint64_t FIXED_RANDOM = chrono::steady_clock::now().time_since_epoch().count();
-        return splitmix64(x + FIXED_RANDOM);
-    }
-};
-
-#define umii unordered_map<int, int, custom_hash>
-#define ghtii gp_hash_table<int, int, custom_hash>
-#define boost(a) a.max_load_factor(0.25); a.reserve(1<<20);
-
-#define eqd(a,b) (abs(a-b)<1e-9)
-
 #endif
 
 struct IO {
@@ -118,16 +95,35 @@ struct IO {
     }
 } io;
 
-void solve() {
+void solve(int n, int k, vi &A) {
+    sort(all(A));
+    if(k == 0) {
+        if(A[0] == 1) {
+            // x can't be < 1
+            cout << -1 << endl;
+        } else {
+            cout << A[0] - 1 << endl;
+        }
+        return;
+    }
 
+    if(k == n) {
+        cout << A[n - 1] << endl;
+        return;
+    }
+
+    // k > 0 && k < n
+    if(A[k - 1] == A[k]) {
+        cout << -1 << endl;
+    } else {
+        cout << A[k - 1] << endl;
+    }
 }
 
 int main() {
     ACTIVATE_FASTIO()
-    /* int t;
-    cin >> t;
-    while(t--) {
-        solve();
-    } */
-    solve();
+    int n, k;
+    cin >> n >> k;
+    var A = io.readInts(n);
+    solve(n, k, A);
 }

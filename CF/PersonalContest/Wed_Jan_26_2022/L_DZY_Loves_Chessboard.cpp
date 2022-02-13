@@ -118,16 +118,39 @@ struct IO {
     }
 } io;
 
-void solve() {
+void solve(int n, int m, vs &rows) {
+    rep(i, 0, n) {
+        rep(j, 0, m) {
+            if(rows[i][j] == '-') continue;
+            
+            bool hasUp = (i > 0 && (rows[i-1][j] == 'W' || rows[i-1][j] == 'B'));
+            bool hasLeft = (j > 0 && (rows[i][j-1] == 'W' || rows[i][j-1] == 'B'));
 
+            if(!hasUp && !hasLeft) {
+                rows[i][j] = 'B';
+            }
+            else if(hasUp && hasLeft) {
+                rows[i][j] = rows[i][j-1] == 'W' ? 'B' : 'W';
+            }
+            else if(hasUp) {
+                rows[i][j] = rows[i - 1][j] == 'W' ? 'B' : 'W';
+            }
+            else if(hasLeft) {
+                rows[i][j] = rows[i][j-1] == 'W' ? 'B' : 'W';
+            }
+        }
+        cout << rows[i] << "\n";
+    }
 }
 
 int main() {
     ACTIVATE_FASTIO()
-    /* int t;
-    cin >> t;
-    while(t--) {
-        solve();
-    } */
-    solve();
+    int n, m;
+    cin >> n >> m;
+    cin.ignore();
+    vs rows(n);
+    rep(i, 0, n) {
+        rows[i] = io.readLine();
+    }
+    solve(n, m, rows);
 }

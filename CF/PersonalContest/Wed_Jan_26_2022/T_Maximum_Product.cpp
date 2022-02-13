@@ -53,28 +53,6 @@ using namespace std;
 #define tr(container, it) for (var it = container.begin(); it != container.end(); it++)
 #define trr(container, it) for (var it = container.rbegin(); it != container.rend(); it++)
 
-// https://codeforces.com/blog/entry/62393
-struct custom_hash {
-    static uint64_t splitmix64(uint64_t x) {
-        // http://xorshift.di.unimi.it/splitmix64.c
-        x += 0x9e3779b97f4a7c15;
-        x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9;
-        x = (x ^ (x >> 27)) * 0x94d049bb133111eb;
-        return x ^ (x >> 31);
-    }
-
-    size_t operator()(uint64_t x) const {
-        static const uint64_t FIXED_RANDOM = chrono::steady_clock::now().time_since_epoch().count();
-        return splitmix64(x + FIXED_RANDOM);
-    }
-};
-
-#define umii unordered_map<int, int, custom_hash>
-#define ghtii gp_hash_table<int, int, custom_hash>
-#define boost(a) a.max_load_factor(0.25); a.reserve(1<<20);
-
-#define eqd(a,b) (abs(a-b)<1e-9)
-
 #endif
 
 struct IO {
@@ -118,16 +96,71 @@ struct IO {
     }
 } io;
 
-void solve() {
+void solve(int n, bool zero, vll &neg, vll &pos) {
+    ll ans = 1;
+    if(n == 5) {
+        if(zero) {
+            cout << 0 << endl;
+        } else {
+            rep(i, 0, neg.size()) ans *= neg[i];
+            rep(i, 0, pos.size()) ans *= pos[i];
+            cout << ans << endl;
+        }
+        return;
+    }
 
+    // now we have at least 6 elements
+    sort(all(neg));
+    sort(all(pos), greater<int>());
+
+    vll possibleAnswers;
+    if(sz(neg) >= 4 && sz(pos) >= 1) {
+        possibleAnswers.eb(neg[0] * neg[1] * neg[2] * neg[3] * pos[0]);
+    }
+
+    if(sz(neg) >= 2 && sz(pos) >= 3) {
+        possibleAnswers.eb(neg[0] * neg[1] * pos[0] * pos[1] * pos[2]);
+    }
+
+    if(sz(neg) >= 0 && sz(pos) >= 5) {
+        possibleAnswers.eb(pos[0] * pos[1] * pos[2] * pos[3] * pos[4]);
+    }
+
+    if(zero) {
+        possibleAnswers.eb(0);
+    }
+
+    if(sz(neg) >= 5) {
+        possibleAnswers.eb(neg[0] * neg[1] * neg[2] * neg[3] * neg[4]);
+    }
+
+    if(sz(neg) >= 3 && sz(pos) >= 2) {
+        possibleAnswers.eb(neg[0] * neg[1] * neg[2] * pos[0] * pos[1]);
+    }
+
+    if(sz(neg) >= 1 && sz(pos) >= 4) {
+        possibleAnswers.eb(neg[0] * pos[0] * pos[1] * pos[2] * pos[3]);
+    }
+
+    sort(all(possibleAnswers), greater<ll>());
+
+    cout << possibleAnswers[0] << endl;
 }
 
 int main() {
     ACTIVATE_FASTIO()
-    /* int t;
+    ll t, n, a;
     cin >> t;
     while(t--) {
-        solve();
-    } */
-    solve();
+        vll neg, pos;
+        bool zero = false;
+        cin >> n;
+        rep(i, 0, n) {
+            cin >> a;
+            if(a < 0) neg.eb(a);
+            else if(a > 0) pos.eb(a);
+            else zero = true;
+        }
+        solve(n, zero, neg, pos);
+    }
 }

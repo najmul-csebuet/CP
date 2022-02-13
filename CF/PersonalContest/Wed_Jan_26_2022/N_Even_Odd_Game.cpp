@@ -119,15 +119,67 @@ struct IO {
 } io;
 
 void solve() {
+    var A = io.readInts();
+    vi evens, odds;
+    rep(i, 0, A.size()) {
+        if (A[i] % 2 == 0) evens.eb(A[i]);
+        else odds.eb(A[i]);
+    }
+    sort(all(evens), greater<int>());
+    sort(all(odds), greater<int>());
 
+    int i = 0, j = 0;
+    ll alice = 0, bob = 0;
+    bool aliceMove = true;
+    while (true) {
+        // Alice
+        if(aliceMove) {
+            if(i < sz(evens) && j < sz(odds)) {
+                if(evens[i] > odds[j]) {
+                    alice += evens[i];
+                    i++;
+                } else {
+                    //alice += odds[j];
+                    j++;
+                }
+            } else if(i < sz(evens)) {
+                alice += evens[i];
+                i++;
+            } else if(j < sz(odds)) {
+                //alice += odds[j];
+                j++;
+            } else break;
+        } else {
+            if(i < sz(evens) && j < sz(odds)) {
+                if(evens[i] > odds[j]) {
+                    //bob += evens[i];
+                    i++;
+                } else {
+                    bob += odds[j];
+                    j++;
+                }
+            } else if(i < sz(evens)) {
+                //bob += evens[i];
+                i++;
+            } else if(j < sz(odds)) {
+                bob += odds[j];
+                j++;
+            } else break;
+        }
+        aliceMove = !aliceMove;
+    }
+
+    if(alice == bob) cout << "Tie\n";
+    else if(alice > bob) cout << "Alice\n";
+    else cout << "Bob\n";
+    
 }
 
 int main() {
     ACTIVATE_FASTIO()
-    /* int t;
+    int t;
     cin >> t;
     while(t--) {
         solve();
-    } */
-    solve();
+    }
 }
